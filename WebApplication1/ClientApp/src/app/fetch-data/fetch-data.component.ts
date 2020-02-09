@@ -14,22 +14,24 @@ interface Book {
 })
 
 export class BookService {
-    [x: string]: any;
 
   public books: Book[];
   public http: HttpClient;
   public baseUrl: string;
+  public index: Number;
+  public i = 0;
 
-  test = {
-    title: "Test title",
-    author: "Test author"
-  }
+  //test = {
+  //  title: "Pricipia",
+  //  author: "Newton"
+  //}
 
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
 
     this.http = http;
     this.baseUrl = baseUrl;
+    this.index = 0;
 
     this.http.get<Book[]>(baseUrl + 'api/book').subscribe(result => {
       console.log(result);
@@ -39,16 +41,35 @@ export class BookService {
   }
 
   addBook() {
-    console.log("!");
-    this.http.post<Book>(this.baseUrl + 'api/book', this.test)
+    this.http.post<Book>(this.baseUrl + 'api/book', {
+      title: "Pricipia" + this.i,
+      author: "Newton"
+    })
       .subscribe(
         data => {
           console.log("POST Request is successful ", data);
+          this.books.push(data);
         },
         error => {
 
           console.log("Error", error);
 
+        }
+
+    );
+    this.i++;
+  }
+
+  deleteBook(data) {    
+
+    this.http.delete<Book>(this.baseUrl + 'api/book/' + data.id)
+      .subscribe(
+        data => {
+          for (let i = 0; this.books.length; i++) {
+            if (this.books[i].id == data.id) {
+              this.books.splice(i, 1);              
+            }
+          }
         }
 
       );
