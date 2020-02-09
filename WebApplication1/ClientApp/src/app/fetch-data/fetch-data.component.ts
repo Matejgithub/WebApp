@@ -17,6 +17,8 @@ export class BookService {
     [x: string]: any;
 
   public books: Book[];
+  public http: HttpClient;
+  public baseUrl: string;
 
   test = {
     title: "Test title",
@@ -26,16 +28,19 @@ export class BookService {
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
 
-    http.get<Book[]>(baseUrl + 'api/book').subscribe(result => {
+    this.http = http;
+    this.baseUrl = baseUrl;
+
+    this.http.get<Book[]>(baseUrl + 'api/book').subscribe(result => {
       console.log(result);
       this.books = result;
     }, error => console.error(error));
 
   }
 
-  addBook(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+  addBook() {
     console.log("!");
-    this.http.post(baseUrl + 'api/book', this.test)
+    this.http.post<Book>(this.baseUrl + 'api/book', this.test)
       .subscribe(
         data => {
           console.log("POST Request is successful ", data);
