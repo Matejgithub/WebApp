@@ -60,18 +60,18 @@ export class BookService {
     this.i++;
   }
 
-  deleteBook(data) {    
+  deleteBook(id) {    
 
-    this.http.delete<Book>(this.baseUrl + 'api/book/' + data.id)
+    this.http.delete<Book>(this.baseUrl + 'api/book/' + id)
       .subscribe(
         data => {
-          for (let i = 0; this.books.length; i++) {
-            if (this.books[i].id == data.id) {
-              this.books.splice(i, 1);              
-            }
-          }
+          //for (let i = 0; this.books.length; i++) {
+          //  if (this.books[i].id == data.id) {
+          //    this.books.splice(i, 1);              
+          //  }
+          //}
+          this.books = this.books.filter(x => x.id != id);
         }
-
       );
   }
 
